@@ -86,6 +86,15 @@ L.Edit.Rectangle = L.Edit.SimpleShape.extend({
 		bounds = this._shape.getBounds();
 		this._moveMarker.setLatLng(bounds.getCenter());
 
+		if (this._map.editTooltip) {
+			latLngs = this._shape._defaultShape ? this._shape._defaultShape() : this._shape.getLatLngs();
+			area = L.GeometryUtil.geodesicArea(latLngs);
+			this._map._editTooltip.updateContent({
+				text: L.drawLocal.edit.handlers.edit.tooltip.subtext + '<br />' + L.drawLocal.edit.handlers.edit.tooltip.text,
+				subtext: L.GeometryUtil.readableArea(area, 'km')
+			});
+		}
+
 		this._map.fire(L.Draw.Event.EDITRESIZE, {layer: this._shape});
 	},
 
